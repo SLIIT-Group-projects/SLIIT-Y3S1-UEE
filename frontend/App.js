@@ -1,22 +1,18 @@
-import { StatusBar } from "expo-status-bar";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  Dimensions,
-  View,
-  Animated,
-} from "react-native";
+import React, { useRef, useEffect } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { ScrollView, View, Animated, Dimensions } from "react-native";
 import FormHeader from "./app/componants/FormHeader";
 import FormSelectorBtn from "./app/componants/FormSelectorBtn";
 import LoginForm from "./app/componants/LoginForm";
 import SignupForm from "./app/componants/SignupForm";
-import { useEffect, useRef } from "react";
 import axios from "axios";
+import HomePage from "./pages/HomePage";
 
 const { width } = Dimensions.get("window");
+const Stack = createStackNavigator();
 
-export default function App() {
+const AuthScreen = () => {
   const animation = useRef(new Animated.Value(0)).current;
   const scrollView = useRef();
 
@@ -44,10 +40,12 @@ export default function App() {
     inputRange: [0, width],
     outputRange: [1, 0], // Fades out as user scrolls
   });
+
   const loginBtnColor = animation.interpolate({
     inputRange: [0, width],
     outputRange: ["rgba(27, 27, 51, 1)", "rgba(27, 27, 51, 0.4)"],
   });
+
   const signupBtnColor = animation.interpolate({
     inputRange: [0, width],
     outputRange: ["rgba(27, 27, 51, 0.4)", "rgba(27, 27, 51, 1)"],
@@ -94,26 +92,18 @@ export default function App() {
         <ScrollView>
           <SignupForm />
         </ScrollView>
-
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            width: Dimensions.get("window").width,
-          }}
-        >
-          <Text style={{ fontWeight: "bold", fontSize: 50 }}>Sign Up</Text>
-        </View>
       </ScrollView>
     </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Auth">
+        <Stack.Screen name="Auth" component={AuthScreen} />
+        <Stack.Screen name="Home" component={HomePage} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}

@@ -50,7 +50,13 @@ exports.userSignIn = async (req, res) => {
       expiresIn: "1d",
     });
 
-    res.json({ success: true, user, token });
+    const userInfo = {
+      userName: user.userName,
+      email: user.email,
+      avatar: user.avatar ? user.avatar : "",
+    };
+
+    res.json({ success: true, user: userInfo, token });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Server error" });
